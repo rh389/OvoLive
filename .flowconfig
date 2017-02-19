@@ -22,6 +22,11 @@ node_modules/react-native/flow
 flow/
 
 [options]
+module.file_ext=.ios.js
+module.file_ext=.android.js
+module.file_ext=.js
+module.file_ext=.json
+
 module.system=haste
 
 experimental.strict_type_args=true

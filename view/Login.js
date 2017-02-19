@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
-import { setAuth } from '../modules/auth';
+import { attemptLogin, setAuth } from '../modules/auth';
 import type { NavigationScreenProp } from 'react-navigation';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -83,27 +83,7 @@ class Login extends React.Component {
   };
 
   attemptLogin(username, password) {
-    return fetch('https://my.ovoenergy.com/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json;charset=UTF-8',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36',
-        'Origin': 'https://my.ovoenergy.com'
-      },
-      body: JSON.stringify({
-        username,
-        password
-      })
-    })
-      .then(res => res.json().then(body => ({ body, status: res.status })))
-      .then(response => {
-        if (response.status !== 200) {
-          throw new Error(response.body.message);
-        }
-        return response.body;
-      })
-      .then((authResponse) => this.props.dispatch(setAuth({ username, password, authResponse })))
+    return this.props.dispatch(attemptLogin(username, password))
       .then(() => this.props.navigation.goBack())
       .catch(err => {
         this.setState({ error: err.message, password: '' });
